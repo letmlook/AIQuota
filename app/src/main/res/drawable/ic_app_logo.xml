@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <!-- Background circle -->
+    <path
+        android:pathData="M20,4 A16,16 0 1,1 20,36 A16,16 0 1,1 20,4"
+        android:fillColor="#FFD93D"/>
+    <!-- Q mark -->
+    <path
+        android:fillColor="#3D3D3D"
+        android:pathData="M32,25 Q35,28 35,31 A8,8 0 1,1 27,23 L29.5,25.5 L28,27 L31,24 Q33.5,22 35,20 A8,8 0 0,0 27,12 Q22,12 20,17 L22,17 Q24,13 27,13 A5,5 0 1,0 27,23 L30,26 A8,8 0 0,1 32,25 Z"/>
+</vector>

@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingVertical="10dp">
 
-    <!-- 模型名称 -->
-    <TextView
-        android:id="@+id/tvModelName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_primary"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="4dp" />
-
-    <!-- 本次周期（5小时） -->
+    <!-- 第一行：模型名称 + 用量（跟随全局 Tab） -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,22 +14,48 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/tvIntervalTime"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvModelName"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:layout_weight="1"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvIntervalReset"
+            android:id="@+id/tvCurrentUsage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/minimax_color"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 时间范围 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp">
+
+        <TextView
+            android:id="@+id/tvTimeRange"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tvResetTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_hint"
-            android:textSize="11sp"
-            android:layout_marginStart="8dp" />
+            android:textSize="10sp" />
     </LinearLayout>
 
-    <!-- 5小时进度条 -->
+    <!-- 进度条 + 百分比 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,71 +71,23 @@
             android:layout_weight="1"
             android:max="100"
             android:progress="0"
-            android:progressDrawable="@drawable/progress_minimax" />
+            android:progressDrawable="@drawable/progress_minimax_new" />
 
         <TextView
-            android:id="@+id/tvIntervalUsage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
-            android:textSize="11sp"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-    <!-- 本周 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="8dp">
-
-        <TextView
-            android:id="@+id/tvWeeklyTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/tvWeeklyReset"
+            android:id="@+id/tvPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_hint"
-            android:textSize="11sp"
-            android:layout_marginStart="8dp" />
+            android:textSize="10sp"
+            android:layout_marginStart="8dp"
+            android:minWidth="32dp"
+            android:gravity="end" />
     </LinearLayout>
 
-    <!-- 本周进度条 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="4dp">
-
-        <ProgressBar
-            android:id="@+id/progressBarWeekly"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="6dp"
-            android:layout_weight="1"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/progress_minimax" />
-
-        <TextView
-            android:id="@+id/tvWeeklyUsage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
-            android:textSize="11sp"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
+    <!-- 分隔线 -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/text_hint"
+        android:background="@color/glass_border"
         android:layout_marginTop="10dp" />
 </LinearLayout>

@@ -18,19 +18,19 @@ class ModelUsageAdapter(
     private val items: List<MinimaxModelRemain>
 ) : RecyclerView.Adapter<ModelUsageAdapter.ViewHolder>() {
 
+    // Tab 状态: 0 = 本次周期(5小时), 1 = 本周
+    var showInterval: Int = 0
+
     private val df = DecimalFormat("#,###")
     private val timeFormat = SimpleDateFormat("MM-dd HH:mm", Locale.getDefault())
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvModelName: TextView = view.findViewById(R.id.tvModelName)
-        val tvIntervalTime: TextView = view.findViewById(R.id.tvIntervalTime)
-        val tvIntervalReset: TextView = view.findViewById(R.id.tvIntervalReset)
+        val tvCurrentUsage: TextView = view.findViewById(R.id.tvCurrentUsage)
+        val tvTimeRange: TextView = view.findViewById(R.id.tvTimeRange)
+        val tvResetTime: TextView = view.findViewById(R.id.tvResetTime)
         val progressBar: ProgressBar = view.findViewById(R.id.progressBar)
-        val tvIntervalUsage: TextView = view.findViewById(R.id.tvIntervalUsage)
-        val tvWeeklyTime: TextView = view.findViewById(R.id.tvWeeklyTime)
-        val tvWeeklyReset: TextView = view.findViewById(R.id.tvWeeklyReset)
-        val progressBarWeekly: ProgressBar = view.findViewById(R.id.progressBarWeekly)
-        val tvWeeklyUsage: TextView = view.findViewById(R.id.tvWeeklyUsage)
+        val tvPercent: TextView = view.findViewById(R.id.tvPercent)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,41 +41,43 @@ class ModelUsageAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        val isInterval = showInterval == 0
+
         holder.tvModelName.text = item.modelName
 
-        // 本次周期（5小时）
-        val startTime = if (item.intervalStartTime > 0) timeFormat.format(Date(item.intervalStartTime)) else "--:--"
-        val endTime = if (item.intervalEndTime > 0) timeFormat.format(Date(item.intervalEndTime)) else "--:--"
-        holder.tvIntervalTime.text = "$startTime - $endTime"
+        if (isInterval) {
+            // 本次周期（5小时）
+            val startTime = if (item.intervalStartTime > 0) timeFormat.format(Date(item.intervalStartTime)) else "--:--"
+            val endTime = if (item.intervalEndTime > 0) timeFormat.format(Date(item.intervalEndTime)) else "--:--"
+            holder.tvTimeRange.text = "$startTime - $endTime"
+            holder.tvResetTime.text = "${formatRemainTime(item.intervalRemainsTime)}后重置"
 
-        val resetStr = formatRemainTime(item.intervalRemainsTime)
-        holder.tvIntervalReset.text = "${resetStr}后重置"
-
-        if (item.isUnlimited || item.totalCount == 0L) {
-            holder.progressBar.progress = 0
-            holder.tvIntervalUsage.text = "无限额"
+            if (item.isUnlimited || item.totalCount == 0L) {
+                holder.progressBar.progress = 0
+                holder.tvPercent.text = "无限"
+                holder.tvCurrentUsage.text = "无限额"
+            } else {
+                holder.progressBar.progress = item.usagePercent
+                holder.tvPercent.text = "${item.usagePercent}%"
+                holder.tvCurrentUsage.text = "${df.format(item.usageCount)} / ${df.format(item.totalCount)}"
+            }
         } else {
-            holder.progressBar.progress = item.usagePercent
-            holder.tvIntervalUsage.text = "${df.format(item.usageCount)} / ${df.format(item.totalCount)}  ${item.usagePercent}% 已使用"
-        }
+            // 本周
+            val weeklyStartTime = if (item.weeklyStartTime > 0) timeFormat.format(Date(item.weeklyStartTime)) else "--:--"
+            val weeklyEndTime = if (item.weeklyEndTime > 0) timeFormat.format(Date(item.weeklyEndTime)) else "--:--"
+            holder.tvTimeRange.text = "$weeklyStartTime - $weeklyEndTime"
+            holder.tvResetTime.text = "${formatRemainTime(item.weeklyRemainsTime)}后重置"
 
-        // 本周
-        val weeklyStartTime = if (item.weeklyStartTime > 0) timeFormat.format(Date(item.weeklyStartTime)) else "--:--"
-        val weeklyEndTime = if (item.weeklyEndTime > 0) timeFormat.format(Date(item.weeklyEndTime)) else "--:--"
-        holder.tvWeeklyTime.text = "$weeklyStartTime - $weeklyEndTime"
-
-        val weeklyResetStr = formatRemainTime(item.weeklyRemainsTime)
-        holder.tvWeeklyReset.text = "${weeklyResetStr}后重置"
-
-        if (item.weeklyTotalCount == 0L) {
-            holder.progressBarWeekly.progress = 0
-            holder.tvWeeklyUsage.text = "无限额"
-        } else {
-            val weeklyPercent = if (item.weeklyTotalCount > 0) {
-                ((item.weeklyUsageCount.toDouble() / item.weeklyTotalCount) * 100).toInt()
-            } else 0
-            holder.progressBarWeekly.progress = weeklyPercent
-            holder.tvWeeklyUsage.text = "${df.format(item.weeklyUsageCount)} / ${df.format(item.weeklyTotalCount)}  ${weeklyPercent}% 已使用"
+            if (item.weeklyTotalCount == 0L) {
+                holder.progressBar.progress = 0
+                holder.tvPercent.text = "无限"
+                holder.tvCurrentUsage.text = "无限额"
+            } else {
+                val weeklyPercent = ((item.weeklyUsageCount.toDouble() / item.weeklyTotalCount) * 100).toInt()
+                holder.progressBar.progress = weeklyPercent
+                holder.tvPercent.text = "${weeklyPercent}%"
+                holder.tvCurrentUsage.text = "${df.format(item.weeklyUsageCount)} / ${df.format(item.weeklyTotalCount)}"
+            }
         }
     }
 

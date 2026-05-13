@@ -4,27 +4,48 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- App Theme -->
+    <!-- App Theme - Dark Mode -->
     <color name="background">#0D1117</color>
     <color name="card_background">#1C1C1E</color>
+    <color name="card_glass">#1A1C1E</color>
     <color name="input_background">#2D2D2D</color>
     <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#AAAAAA</color>
-    <color name="text_hint">#666666</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_hint">#555555</color>
 
     <!-- Provider Colors -->
     <color name="minimax_color">#00D1FF</color>
     <color name="deepseek_color">#1E88E5</color>
     <color name="minimax_dark">#00A8CC</color>
     <color name="deepseek_dark">#1565C0</color>
+    <color name="settings_color">#4CAF50</color>
+
+    <!-- Gradients -->
+    <color name="gradient_minimax_start">#00D1FF</color>
+    <color name="gradient_minimax_end">#0088CC</color>
+    <color name="gradient_deepseek_start">#1E88E5</color>
+    <color name="gradient_deepseek_end">#0D47A1</color>
+    <color name="gradient_settings_start">#4CAF50</color>
+    <color name="gradient_settings_end">#2E7D32</color>
+    <color name="gradient_btn_start">#FFD93D</color>
+    <color name="gradient_btn_end">#FF8C00</color>
 
     <!-- Status Colors -->
     <color name="success">#4CAF50</color>
+    <color name="success_light">#81C784</color>
     <color name="warning">#FF9800</color>
+    <color name="warning_light">#FFB74D</color>
     <color name="error">#F44336</color>
+    <color name="error_light">#EF5350</color>
 
     <!-- Progress Bar -->
-    <color name="progress_track">#333333</color>
+    <color name="progress_track">#2D2D2D</color>
+    <color name="progress_minimax">#00D1FF</color>
+    <color name="progress_deepseek">#1E88E5</color>
+
+    <!-- Glass Effect -->
+    <color name="glass_bg">#CC1C1C1E</color>
+    <color name="glass_border">#33FFFFFF</color>
 
     <!-- Material Colors (保留) -->
     <color name="purple_200">#FFBB86FC</color>

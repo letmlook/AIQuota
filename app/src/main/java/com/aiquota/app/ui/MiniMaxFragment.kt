@@ -18,9 +18,6 @@ import com.aiquota.app.model.QuotaInfo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class MiniMaxFragment : Fragment() {
 
@@ -31,6 +28,10 @@ class MiniMaxFragment : Fragment() {
     private lateinit var historyManager: HistoryManager
     private var autoRefreshJob: Job? = null
     private val autoRefreshIntervalMs = 5 * 60 * 1000L
+
+    // 全局 Tab 状态: 0 = 本次周期, 1 = 本周
+    private var currentTab = 0
+    private var modelAdapter: ModelUsageAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,14 +46,22 @@ class MiniMaxFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         historyManager = HistoryManager(requireContext())
         setupViews()
+        // 默认加载数据
+        val token = getSavedToken()
+        if (token.isNotEmpty()) {
+            queryQuota(token)
+        }
     }
 
     private fun setupViews() {
-        binding.btnQueryMinimax.setOnClickListener {
+        // 下拉刷新
+        binding.swipeRefresh.setColorSchemeResources(R.color.minimax_color)
+        binding.swipeRefresh.setOnRefreshListener {
             val token = getSavedToken()
             if (token.isEmpty()) {
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(context, "请先在设置页配置 Token", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                return@setOnRefreshListener
             }
             queryQuota(token)
         }
@@ -74,6 +83,33 @@ class MiniMaxFragment : Fragment() {
         binding.btnHistoryMinimax.setOnClickListener {
             showHistory()
         }
+
+        // Tab 切换
+        binding.tabInterval.setOnClickListener {
+            switchTab(0)
+        }
+
+        binding.tabWeekly.setOnClickListener {
+            switchTab(1)
+        }
+    }
+
+    private fun switchTab(tab: Int) {
+        currentTab = tab
+        modelAdapter?.showInterval = tab
+        modelAdapter?.notifyDataSetChanged()
+        if (tab == 0) {
+            binding.tabInterval.setBackgroundResource(R.drawable.bg_tab_selected)
+            binding.tabInterval.setTextColor(requireContext().getColor(R.color.text_primary))
+            binding.tabWeekly.setBackgroundResource(android.R.color.transparent)
+            binding.tabWeekly.setTextColor(requireContext().getColor(R.color.text_hint))
+        } else {
+            binding.tabWeekly.setBackgroundResource(R.drawable.bg_tab_selected)
+            binding.tabWeekly.setTextColor(requireContext().getColor(R.color.text_primary))
+            binding.tabInterval.setBackgroundResource(android.R.color.transparent)
+            binding.tabInterval.setTextColor(requireContext().getColor(R.color.text_hint))
+        }
+        modelAdapter?.notifyDataSetChanged()
     }
 
     private fun getSavedToken(): String {
@@ -81,17 +117,9 @@ class MiniMaxFragment : Fragment() {
             .getString("minimax_token", "") ?: ""
     }
 
-    override fun onResume() {
-        super.onResume()
-        val token = getSavedToken()
-        if (token.isNotEmpty()) {
-            queryQuota(token)
-        }
-    }
-
     private fun queryQuota(token: String) {
-        setLoading(true)
         hideAllCards()
+        binding.swipeRefresh.isRefreshing = true
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -102,7 +130,7 @@ class MiniMaxFragment : Fragment() {
                     showError(error)
                 }
             } finally {
-                setLoading(false)
+                binding.swipeRefresh.isRefreshing = false
             }
         }
     }
@@ -110,7 +138,7 @@ class MiniMaxFragment : Fragment() {
     private fun updateUI(quota: QuotaInfo) {
         binding.cardMinimaxResult.visibility = View.VISIBLE
 
-        // 状态颜色（根据使用百分比判断）
+        // 状态颜色
         val usagePercent = quota.usagePercent
         val (statusText, statusColor) = when {
             !quota.isAvailable -> "⚠️ 额度用尽" to R.color.error
@@ -120,13 +148,17 @@ class MiniMaxFragment : Fragment() {
         binding.tvStatusMinimax.text = statusText
         binding.tvStatusMinimax.setTextColor(requireContext().getColor(statusColor))
 
-        // 模型列表（显示所有模型）
+        // 模型列表
         if (quota.minimaxModelRemains.isNotEmpty()) {
             binding.rvModelList.layoutManager = LinearLayoutManager(context)
-            binding.rvModelList.adapter = ModelUsageAdapter(quota.minimaxModelRemains)
+            modelAdapter = ModelUsageAdapter(quota.minimaxModelRemains)
+            modelAdapter?.showInterval = currentTab
+            binding.rvModelList.adapter = modelAdapter
             binding.rvModelList.visibility = View.VISIBLE
+            binding.emptyState.visibility = View.GONE
         } else {
             binding.rvModelList.visibility = View.GONE
+            binding.emptyState.visibility = View.VISIBLE
         }
 
         // 记录历史
@@ -149,11 +181,6 @@ class MiniMaxFragment : Fragment() {
     private fun hideAllCards() {
         binding.cardMinimaxResult.visibility = View.GONE
         binding.cardMinimaxError.visibility = View.GONE
-    }
-
-    private fun setLoading(loading: Boolean) {
-        binding.btnQueryMinimax.isEnabled = !loading
-        binding.progressMinimax.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun startAutoRefresh(token: String) {

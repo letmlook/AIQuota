@@ -3,53 +3,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
 
-    <TextView
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:id="@+id/headerBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="AI 额度查询"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_primary"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvDebugInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="调试模式"
-        android:textSize="11sp"
-        android:textColor="@color/text_hint"
-        android:gravity="center"
-        android:background="@color/input_background"
-        android:padding="6dp"
-        android:fontFamily="monospace"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="56dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        <!-- App Icon -->
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_app_logo"
+            android:contentDescription="App Logo" />
 
+        <!-- 标题 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AIQuota"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="额度查询助手"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"
+                android:fontFamily="sans-serif" />
+        </LinearLayout>
+
+        <!-- 装饰圆点 -->
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_success" />
+    </LinearLayout>
+
+    <!-- ViewPager -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/tvDebugInfo"
+        app:layout_constraintTop_toBottomOf="@id/headerBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- 导航栏顶部阴影 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/glass_border"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
+
+    <!-- 底部导航 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/card_background"
-        app:itemIconTint="@color/bottom_nav_color"
-        app:itemTextColor="@color/bottom_nav_color"
-        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/bottom_nav_color_new"
+        app:itemTextColor="@color/bottom_nav_color_new"
         app:menu="@menu/menu_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

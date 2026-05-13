@@ -4,17 +4,22 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingVertical="8dp">
+    android:paddingVertical="10dp">
+
+    <!-- 模型图标 -->
+    <View
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:background="@drawable/circle_deepseek" />
 
     <TextView
         android:id="@+id/tvModelName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginStart="10dp"
         android:textColor="@color/text_primary"
-        android:textSize="13sp"
-        android:ellipsize="end"
-        android:maxLines="1" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvModelUsage"
@@ -22,5 +27,12 @@
         android:layout_height="wrap_content"
         android:textColor="@color/deepseek_color"
         android:textSize="13sp"
-        android:fontFamily="monospace" />
+        android:fontFamily="monospace"
+        android:textStyle="bold" />
+
+    <!-- 分隔线 -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

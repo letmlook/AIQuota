@@ -42,14 +42,22 @@ class DeepSeekFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         historyManager = HistoryManager(requireContext())
         setupViews()
+        // 默认加载数据
+        val token = getSavedToken()
+        if (token.isNotEmpty()) {
+            queryQuota(token)
+        }
     }
 
     private fun setupViews() {
-        binding.btnQueryDeepSeek.setOnClickListener {
+        // 下拉刷新
+        binding.swipeRefresh.setColorSchemeResources(R.color.deepseek_color)
+        binding.swipeRefresh.setOnRefreshListener {
             val token = getSavedToken()
             if (token.isEmpty()) {
+                binding.swipeRefresh.isRefreshing = false
                 Toast.makeText(context, "请先在设置页配置 Token", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                return@setOnRefreshListener
             }
             queryQuota(token)
         }
@@ -78,17 +86,9 @@ class DeepSeekFragment : Fragment() {
             .getString("deepseek_token", "") ?: ""
     }
 
-    override fun onResume() {
-        super.onResume()
-        val token = getSavedToken()
-        if (token.isNotEmpty()) {
-            queryQuota(token)
-        }
-    }
-
     private fun queryQuota(token: String) {
-        setLoading(true)
         hideAllCards()
+        binding.swipeRefresh.isRefreshing = true
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -99,7 +99,7 @@ class DeepSeekFragment : Fragment() {
                     showError(error)
                 }
             } finally {
-                setLoading(false)
+                binding.swipeRefresh.isRefreshing = false
             }
         }
     }
@@ -129,8 +129,10 @@ class DeepSeekFragment : Fragment() {
             binding.rvDeepSeekUsage.layoutManager = LinearLayoutManager(context)
             binding.rvDeepSeekUsage.adapter = DeepSeekUsageAdapter(quota.modelUsages)
             binding.rvDeepSeekUsage.visibility = View.VISIBLE
+            binding.emptyState.visibility = View.GONE
         } else {
             binding.rvDeepSeekUsage.visibility = View.GONE
+            binding.emptyState.visibility = View.VISIBLE
         }
 
         // 记录历史
@@ -153,11 +155,6 @@ class DeepSeekFragment : Fragment() {
     private fun hideAllCards() {
         binding.cardDeepSeekResult.visibility = View.GONE
         binding.cardDeepSeekError.visibility = View.GONE
-    }
-
-    private fun setLoading(loading: Boolean) {
-        binding.btnQueryDeepSeek.isEnabled = !loading
-        binding.progressDeepSeek.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun startAutoRefresh(token: String) {
