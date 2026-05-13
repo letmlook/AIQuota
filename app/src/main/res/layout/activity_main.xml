@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D1117">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,31 +15,32 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AI套餐查询"
+            android:text="AI 额度查询"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp" />
 
         <!-- 保存按钮 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveKeys"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="保存Key"
-            android:textColor="#FFFFFF"
+            android:text="💾 保存 Key"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:layout_marginBottom="20dp"
-            app:backgroundTint="#4CAF50" />
+            app:backgroundTint="@color/card_background"
+            app:cornerRadius="12dp" />
 
         <!-- ========== MiniMax 部分 ========== -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#1C1C1E"
+            app:cardBackgroundColor="@color/card_background"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp">
 
@@ -55,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:background="#00D1FF"
+                    android:background="@color/minimax_color"
                     android:padding="12dp"
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="8dp">
@@ -78,6 +79,21 @@
                         android:textStyle="bold"
                         android:textColor="#000000"
                         android:layout_marginStart="12dp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tvStatusMinimax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正常"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- API Key 输入 -->
@@ -85,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="API Key"
-                    android:textColor="#AAAAAA"
+                    android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
@@ -93,14 +109,49 @@
                     android:id="@+id/etMinimaxKey"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="#2D2D2D"
-                    android:hint="输入你的API Key"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#666666"
-                    android:textSize="16sp"
+                    android:background="@color/input_background"
+                    android:hint="输入你的 API Key"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
                     android:paddingHorizontal="12dp"
                     android:inputType="textPassword"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="12dp" />
+
+                <!-- 自动刷新 + 历史按钮 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchAutoRefreshMinimax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="自动刷新"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        app:thumbTint="@color/minimax_color"
+                        app:trackTint="@color/text_hint" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnHistoryMinimax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="📜 历史"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        app:backgroundTint="@color/input_background"
+                        app:cornerRadius="8dp"
+                        android:paddingHorizontal="12dp" />
+                </LinearLayout>
 
                 <!-- 查询按钮 -->
                 <com.google.android.material.button.MaterialButton
@@ -111,7 +162,7 @@
                     android:textColor="#000000"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#00D1FF"
+                    app:backgroundTint="@color/minimax_color"
                     app:cornerRadius="8dp" />
 
                 <!-- Loading -->
@@ -121,7 +172,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    android:indeterminateTint="#00D1FF"
+                    android:indeterminateTint="@color/minimax_color"
                     android:layout_marginTop="12dp" />
 
                 <!-- 结果展示 -->
@@ -131,35 +182,70 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:visibility="gone"
-                    app:cardBackgroundColor="#0D1117"
-                    app:cardCornerRadius="8dp"
+                    app:cardBackgroundColor="@color/background"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="4dp"
-                    app:strokeColor="#00D1FF">
+                    app:strokeWidth="3dp"
+                    app:strokeColor="@color/minimax_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <!-- 进度条区域 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="=== MiniMax ==="
-                            android:textColor="#00D1FF"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:fontFamily="monospace"
-                            android:layout_marginBottom="8dp" />
+                            android:orientation="vertical"
+                            android:layout_marginBottom="12dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="额度使用"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/tvUsagePercentMinimax"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0%"
+                                    android:textColor="@color/minimax_color"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/progressBarMinimax"
+                                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp"
+                                android:layout_marginTop="6dp"
+                                android:progressDrawable="@drawable/progress_minimax"
+                                android:visibility="gone" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvMinimaxResult"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_primary"
                             android:textSize="14sp"
-                            android:fontFamily="monospace"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -171,7 +257,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="#1C1C1E"
+            app:cardBackgroundColor="@color/card_background"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp">
 
@@ -187,7 +273,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:background="#1E88E5"
+                    android:background="@color/deepseek_color"
                     android:padding="12dp"
                     android:layout_marginBottom="16dp">
 
@@ -209,6 +295,21 @@
                         android:textStyle="bold"
                         android:textColor="#FFFFFF"
                         android:layout_marginStart="12dp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tvStatusDeepSeek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正常"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <!-- API Key 输入 -->
@@ -216,7 +317,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="API Key"
-                    android:textColor="#AAAAAA"
+                    android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:layout_marginBottom="8dp" />
 
@@ -224,14 +325,49 @@
                     android:id="@+id/etDeepSeekKey"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="#2D2D2D"
-                    android:hint="输入你的API Key"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#666666"
-                    android:textSize="16sp"
+                    android:background="@color/input_background"
+                    android:hint="输入你的 API Key"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_hint"
+                    android:textSize="14sp"
                     android:paddingHorizontal="12dp"
                     android:inputType="textPassword"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="12dp" />
+
+                <!-- 自动刷新 + 历史按钮 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchAutoRefreshDeepSeek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="自动刷新"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        app:thumbTint="@color/deepseek_color"
+                        app:trackTint="@color/text_hint" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnHistoryDeepSeek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="📜 历史"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        app:backgroundTint="@color/input_background"
+                        app:cornerRadius="8dp"
+                        android:paddingHorizontal="12dp" />
+                </LinearLayout>
 
                 <!-- 查询按钮 -->
                 <com.google.android.material.button.MaterialButton
@@ -242,7 +378,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:backgroundTint="#1E88E5"
+                    app:backgroundTint="@color/deepseek_color"
                     app:cornerRadius="8dp" />
 
                 <!-- Loading -->
@@ -252,7 +388,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    android:indeterminateTint="#1E88E5"
+                    android:indeterminateTint="@color/deepseek_color"
                     android:layout_marginTop="12dp" />
 
                 <!-- 结果展示 -->
@@ -262,35 +398,70 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:visibility="gone"
-                    app:cardBackgroundColor="#0D1117"
-                    app:cardCornerRadius="8dp"
+                    app:cardBackgroundColor="@color/background"
+                    app:cardCornerRadius="12dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="4dp"
-                    app:strokeColor="#1E88E5">
+                    app:strokeWidth="3dp"
+                    app:strokeColor="@color/deepseek_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <!-- 进度条区域 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="=== DeepSeek ==="
-                            android:textColor="#1E88E5"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:fontFamily="monospace"
-                            android:layout_marginBottom="8dp" />
+                            android:orientation="vertical"
+                            android:layout_marginBottom="12dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="余额"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1" />
+
+                                <TextView
+                                    android:id="@+id/tvUsagePercentDeepSeek"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0%"
+                                    android:textColor="@color/deepseek_color"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/progressBarDeepSeek"
+                                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp"
+                                android:layout_marginTop="6dp"
+                                android:progressDrawable="@drawable/progress_deepseek"
+                                android:visibility="gone" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvDeepSeekResult"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_primary"
                             android:textSize="14sp"
-                            android:fontFamily="monospace"
                             android:lineSpacingExtra="4dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

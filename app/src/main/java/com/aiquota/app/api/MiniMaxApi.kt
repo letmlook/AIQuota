@@ -18,68 +18,68 @@ class MiniMaxApi {
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    // MiniMax 可能可用的 API 端点
-    private val quotaUrls = listOf(
-        "https://api.minimaxi.com/group/balance",
-        "https://api.minimaxi.com/v1/group/balance"
-    )
+    // MiniMax 余额查询 API（正确端点）
+    private val quotaUrl = "https://www.minimaxi.com/v1/token_plan/remains"
 
     suspend fun queryQuota(apiKey: String): Result<QuotaInfo> = withContext(Dispatchers.IO) {
-        var lastError: Exception? = null
-        
-        for (quotaUrl in quotaUrls) {
-            try {
-                val requestBody = "{}".toRequestBody("application/json".toMediaType())
-                
-                val request = Request.Builder()
-                    .url(quotaUrl)
-                    .addHeader("Authorization", "Bearer $apiKey")
-                    .addHeader("Content-Type", "application/json")
-                    .post(requestBody)
-                    .build()
+        try {
+            val requestBody = "{}".toRequestBody("application/json".toMediaType())
 
-                val response = client.newCall(request).execute()
-                val body = response.body?.string() ?: ""
+            val request = Request.Builder()
+                .url(quotaUrl)
+                .addHeader("Authorization", "Bearer $apiKey")
+                .addHeader("Content-Type", "application/json")
+                .post(requestBody)
+                .build()
 
-                if (response.isSuccessful) {
-                    val json = JSONObject(body)
-                    
-                    // MiniMax 返回格式可能是: { "code": 0, "data": { "total_amount": ..., "used_amount": ... } }
-                    if (json.has("error") || json.has("message")) {
-                        val errorMsg = json.optString("error", json.optString("message", "未知错误"))
-                        return@withContext Result.failure(Exception(errorMsg))
-                    }
-                    
-                    val data = if (json.has("data")) json.getJSONObject("data") else json
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: ""
 
-                    val total = data.optDouble("total_amount", 0.0).toLong()
-                    val used = data.optDouble("used_amount", 0.0).toLong()
-                    val remaining = total - used
+            if (response.isSuccessful) {
+                val json = JSONObject(body)
 
-                    return@withContext Result.success(
-                        QuotaInfo(
-                            planName = data.optString("plan_name", data.optString("planName", "标准套餐")),
-                            status = data.optString("status", if (remaining > 0) "正常" else "额度用尽"),
-                            used = used,
-                            total = total,
-                            remaining = remaining,
-                            usedFormatted = formatTokens(used),
-                            totalFormatted = formatTokens(total),
-                            remainingFormatted = formatTokens(remaining),
-                            usagePercent = if (total > 0) ((used.toDouble() / total) * 100).toInt() else 0,
-                            resetDate = data.optString("reset_date", data.optString("resetDate", ""))
-                        )
-                    )
-                } else {
-                    lastError = Exception("请求失败 (HTTP ${response.code}): $body")
+                // 错误检查
+                if (json.has("error")) {
+                    val errorMsg = json.optString("error", "未知错误")
+                    return@withContext Result.failure(Exception(errorMsg))
                 }
-            } catch (e: Exception) {
-                lastError = e
+
+                // MiniMax 返回格式:
+                // { "code": 0, "data": { "total_amount": "...", "used_amount": "...", "remain_amount": "..." } }
+                val data = json.optJSONObject("data") ?: json
+
+                val total = data.optString("total_amount", "0").toLongOrNull() ?: 0L
+                val used = data.optString("used_amount", "0").toLongOrNull() ?: 0L
+                val remaining = data.optString("remain_amount", "0").toLongOrNull() ?: (total - used)
+
+                return@withContext Result.success(
+                    QuotaInfo(
+                        provider = "MiniMax",
+                        planName = data.optString("plan_name", "标准套餐"),
+                        status = if (remaining > 0) "正常" else "额度用尽",
+                        isAvailable = remaining > 0,
+                        used = used,
+                        total = total,
+                        remaining = remaining,
+                        usedFormatted = formatTokens(used),
+                        totalFormatted = formatTokens(total),
+                        remainingFormatted = formatTokens(remaining),
+                        usagePercent = if (total > 0) ((used.toDouble() / total) * 100).toInt() else 0,
+                        resetDate = data.optString("reset_date", "")
+                    )
+                )
+            } else {
+                val errorMsg = try {
+                    val errJson = JSONObject(body)
+                    errJson.optString("error", errJson.optString("message", "HTTP ${response.code}"))
+                } catch (e: Exception) {
+                    "HTTP ${response.code}"
+                }
+                Result.failure(Exception("请求失败: $errorMsg"))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        
-        // 所有端点都失败了，返回错误
-        Result.failure(lastError ?: Exception("MiniMax 余额查询 API 暂不可用，请确认 API Key 是否正确"))
     }
 
     private fun formatTokens(tokens: Long): String {
