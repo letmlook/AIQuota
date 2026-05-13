@@ -1,3 +1,7 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -33,6 +37,16 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+
+    applicationVariants.all {
+        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+        val formattedDate = dateFormat.format(Date())
+        outputs.all {
+            if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
+                outputFileName = "AIQuota_v${versionName}_${formattedDate}.apk"
+            }
+        }
     }
 }
 

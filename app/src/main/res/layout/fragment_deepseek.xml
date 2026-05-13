@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 查询按钮 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnQueryDeepSeek"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="查 询"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/deepseek_color"
+            app:cornerRadius="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 自动刷新 Switch -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchAutoRefreshDeepSeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自动刷新（每5分钟）"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                app:thumbTint="@color/deepseek_color"
+                app:trackTint="@color/text_hint" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHistoryDeepSeek"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="📜 历史"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary"
+                app:backgroundTint="@color/card_background"
+                app:cornerRadius="8dp"
+                android:paddingHorizontal="12dp" />
+        </LinearLayout>
+
+        <!-- Loading -->
+        <ProgressBar
+            android:id="@+id/progressDeepSeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminateTint="@color/deepseek_color"
+            android:layout_marginTop="8dp" />
+
+        <!-- 结果卡片 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardDeepSeekResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/deepseek_color">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- 状态 -->
+                <TextView
+                    android:id="@+id/tvStatusDeepSeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- 余额详情 -->
+                <TextView
+                    android:id="@+id/tvDeepSeekResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="14sp"
+                    android:lineSpacingExtra="6dp"
+                    android:fontFamily="monospace"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- 模型用量列表 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvDeepSeekUsage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 错误提示 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardDeepSeekError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/error">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvDeepSeekError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/error"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
