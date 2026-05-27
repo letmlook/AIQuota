@@ -20,6 +20,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.VolcEngineLoginActivity"
+            android:theme="@style/Theme.AIQuota"
+            android:exported="false" />
+
     </application>
 
 </manifest>

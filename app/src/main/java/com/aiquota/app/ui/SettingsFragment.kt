@@ -32,6 +32,12 @@ class SettingsFragment : Fragment() {
         val prefs = requireContext().getSharedPreferences("ai_quota_prefs", android.content.Context.MODE_PRIVATE)
         binding.etMinimaxToken.setText(prefs.getString("minimax_token", "") ?: "")
         binding.etDeepSeekToken.setText(prefs.getString("deepseek_token", "") ?: "")
+
+        val volcDigest = prefs.getString("volc_digest", "") ?: ""
+        binding.tvVolcLoginStatus.text = if (volcDigest.isNotEmpty()) "已登录" else "未登录"
+        binding.tvVolcLoginStatus.setTextColor(
+            requireContext().getColor(if (volcDigest.isNotEmpty()) com.aiquota.app.R.color.success else com.aiquota.app.R.color.text_hint)
+        )
     }
 
     private fun setupViews() {

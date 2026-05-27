@@ -19,6 +19,8 @@
     <color name="minimax_dark">#00A8CC</color>
     <color name="deepseek_dark">#1565C0</color>
     <color name="settings_color">#4CAF50</color>
+    <color name="volcengine_color">#FF6A00</color>
+    <color name="volcengine_dark">#CC5500</color>
 
     <!-- Gradients -->
     <color name="gradient_minimax_start">#00D1FF</color>
@@ -29,6 +31,8 @@
     <color name="gradient_settings_end">#2E7D32</color>
     <color name="gradient_btn_start">#FFD93D</color>
     <color name="gradient_btn_end">#FF8C00</color>
+    <color name="gradient_volcengine_start">#FF6A00</color>
+    <color name="gradient_volcengine_end">#CC4400</color>
 
     <!-- Status Colors -->
     <color name="success">#4CAF50</color>
@@ -42,6 +46,7 @@
     <color name="progress_track">#2D2D2D</color>
     <color name="progress_minimax">#00D1FF</color>
     <color name="progress_deepseek">#1E88E5</color>
+    <color name="progress_volcengine">#FF6A00</color>
 
     <!-- Glass Effect -->
     <color name="glass_bg">#CC1C1C1E</color>

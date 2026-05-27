@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupViewPager() {
         val adapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = adapter
-        binding.viewPager.offscreenPageLimit = 2
+        binding.viewPager.offscreenPageLimit = 3
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 isUserSwiping = state == ViewPager2.SCROLL_STATE_DRAGGING
@@ -45,8 +45,12 @@ class MainActivity : AppCompatActivity() {
                     binding.viewPager.currentItem = 1
                     true
                 }
-                R.id.nav_settings -> {
+                R.id.nav_volcengine -> {
                     binding.viewPager.currentItem = 2
+                    true
+                }
+                R.id.nav_settings -> {
+                    binding.viewPager.currentItem = 3
                     true
                 }
                 else -> false
@@ -58,7 +62,8 @@ class MainActivity : AppCompatActivity() {
         val itemId = when (position) {
             0 -> R.id.nav_minimax
             1 -> R.id.nav_deepseek
-            2 -> R.id.nav_settings
+            2 -> R.id.nav_volcengine
+            3 -> R.id.nav_settings
             else -> return
         }
         if (binding.bottomNavigation.selectedItemId != itemId) {

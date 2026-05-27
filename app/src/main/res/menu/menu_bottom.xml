@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_nav_deepseek"
         android:title="DeepSeek" />
     <item
+        android:id="@+id/nav_volcengine"
+        android:icon="@drawable/ic_nav_volcengine"
+        android:title="火山" />
+    <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_nav_settings"
         android:title="设置" />

@@ -19,7 +19,11 @@ data class QuotaInfo(
     /** DeepSeek 模型用量列表 */
     val modelUsages: List<ModelUsage> = emptyList(),
     /** MiniMax 模型限额列表 */
-    val minimaxModelRemains: List<MinimaxModelRemain> = emptyList()
+    val minimaxModelRemains: List<MinimaxModelRemain> = emptyList(),
+    /** 火山 Coding Plan 用量列表 */
+    val volcPlanUsages: List<VolcPlanUsage> = emptyList(),
+    /** 火山订阅信息 */
+    val volcSubscribeInfo: VolcSubscribeInfo? = null
 )
 
 /**
@@ -51,4 +55,28 @@ data class MinimaxModelRemain(
     val weeklyRemainsTime: Long = 0,
     val weeklyTotalCount: Long = 0,
     val weeklyUsageCount: Long = 0
+)
+
+/**
+ * 火山 Coding Plan 用量数据（按时间维度）
+ */
+data class VolcPlanUsage(
+    val level: String,           // "session" / "weekly" / "monthly"
+    val percent: Double,         // 已用百分比 0-100
+    val resetTimestamp: Long,    // 重置时间 Unix 秒
+    val levelLabel: String,      // "近5小时" / "本周" / "本月"
+    val remainingPercent: Double,
+    val resetTimeFormatted: String
+)
+
+/**
+ * 火山 Coding Plan 订阅信息
+ */
+data class VolcSubscribeInfo(
+    val bizInfo: String,         // "lite" / "pro"
+    val status: String,          // "Running"
+    val startTime: String,
+    val endTime: String,
+    val autoRenew: Boolean,
+    val period: String           // "monthly"
 )
